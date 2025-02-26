@@ -27,17 +27,17 @@ public class Silla {
     private boolean disponible;
 
     @Column(nullable = false)
-    private Long mesa_id;
+    private Long mesaId;
 
     public Silla() {
     }
 
-    public Silla(Long id, String nombre, Integer numeroSilla, boolean disponible, Long mesa_id) {
+    public Silla(Long id, String nombre, Integer numeroSilla, boolean disponible, Long mesaId) {
         this.id = id;
         this.nombre = nombre;
         this.numeroSilla = numeroSilla;
         this.disponible = disponible;
-        this.mesa_id = mesa_id;
+        this.mesaId = mesaId;
     }
 
     public Long getId() {
@@ -72,12 +72,12 @@ public class Silla {
         this.disponible = disponible;
     }
 
-    public Long getMesa_id() {
-        return mesa_id;
+    public Long getMesaId() {
+        return mesaId;
     }
 
-    public void setMesa_id(Long mesa_id) {
-        this.mesa_id = mesa_id;
+    public void setMesaId(Long mesaId) {
+        this.mesaId = mesaId;
     }
 
     // Método para generar el nombre de la silla basado en la mesa
