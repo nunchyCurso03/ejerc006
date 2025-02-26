@@ -28,17 +28,17 @@ public class Mesa {
     private Integer numeroSillas;
 
     @Column(nullable = false)
-    private Long aula_id;
+    private Long aulaId;
 
     public Mesa() {
     }
 
-    public Mesa(Long id,String nombre,  @Positive Integer capacidadMaxima, @Positive Integer numeroSillas, Long aula_id) {
+    public Mesa(Long id,String nombre,  @Positive Integer capacidadMaxima, @Positive Integer numeroSillas, Long aulaId) {
         this.id = id;
         this.nombre = nombre;
         this.capacidadMaxima = capacidadMaxima;
         this.numeroSillas = numeroSillas;
-        this.aula_id = aula_id;
+        this.aulaId = aulaId;
     }
 
     public Long getId() {
@@ -73,12 +73,12 @@ public class Mesa {
         this.numeroSillas = numeroSillas;
     }
 
-    public Long getAula_id() {
-        return aula_id;
+    public Long getAulaId() {
+        return aulaId;
     }
 
-    public void setAula_id(Long aula_id) {
-        this.aula_id = aula_id;
+    public void setAula_id(Long aulaId) {
+        this.aulaId = aulaId;
     }  
 
     // Método para generar el nombre de la mesa basado en el aula

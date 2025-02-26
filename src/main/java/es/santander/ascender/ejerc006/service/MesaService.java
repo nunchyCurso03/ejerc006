@@ -6,13 +6,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.santander.ascender.ejerc006.model.Mesa;
+import es.santander.ascender.ejerc006.model.Silla;
 import es.santander.ascender.ejerc006.repository.MesaRepository;
+import es.santander.ascender.ejerc006.repository.SillaRepository;
 
 @Service
 public class MesaService {
 
     @Autowired
     private MesaRepository mesaRepository;
+
+     @Autowired
+    private SillaRepository sillaRepository;
 
     // Crear una Mesa
     public Mesa create(Mesa mesa) {
@@ -53,5 +58,20 @@ public class MesaService {
     // Eliminar una Mesa por ID
     public void delete(Long id) {
         mesaRepository.deleteById(id);
+    }
+
+    // Método para mover una mesa a otro aula
+    public Mesa moveToNewAula(Long mesaId, Long nuevaAulaId) {
+        Mesa mesa = mesaRepository.findById(mesaId).orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
+        mesa.setAula_id(nuevaAulaId);
+
+        // Actualizamos las sillas que pertenecen a esta mesa
+        List<Silla> sillas = sillaRepository.findByMesaId(mesaId);
+        for (Silla silla : sillas) {
+            silla.setMesaId(mesaId);
+            sillaRepository.save(silla);  // Guardamos la silla con el nuevo mesa_id
+        }
+
+        return mesaRepository.save(mesa);  // Guardamos la mesa con el nuevo aula_id
     }
 }

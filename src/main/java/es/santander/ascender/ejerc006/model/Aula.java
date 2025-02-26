@@ -38,19 +38,19 @@ public class Aula {
     private boolean proyector;
 
     @Column(nullable = false)
-    private Long edificio_id;
+    private Long edificioId;
 
     public Aula() {
     }
 
-    public Aula(Long id, String nombre, TipoAula tipoAula, Integer capacidadMaxima, Integer numeroMesas, boolean proyector, Long edificio_id) {
+    public Aula(Long id, String nombre, TipoAula tipoAula, Integer capacidadMaxima, Integer numeroMesas, boolean proyector, Long edificioId) {
         this.id = id;
         this.nombre = nombre;
         this.tipoAula = tipoAula;  
         this.capacidadMaxima = capacidadMaxima;
         this.numeroMesas = numeroMesas;           
         this.proyector = proyector;
-        this.edificio_id = edificio_id;
+        this.edificioId = edificioId;
     }
 
     public Long getId() {
@@ -102,12 +102,12 @@ public class Aula {
         this.proyector = proyector;
     }
  
-    public Long getEdificio_id() {
-        return edificio_id;
+    public Long getEdificioId() {
+        return edificioId;
     }
 
-    public void setEdificio_id(Long edificio_id) {
-        this.edificio_id = edificio_id;
+    public void setEdificioId(Long edificioId) {
+        this.edificioId = edificioId;
     }
 
  
