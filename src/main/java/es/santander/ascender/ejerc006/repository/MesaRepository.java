@@ -11,4 +11,7 @@ public interface MesaRepository extends JpaRepository<Mesa, Long>{
      // Buscar todas las mesas de un aula específica
      List<Mesa> findByAulaId(Long aulaId);
 
+     //contar las mesas de un aula espececífica
+     int countByAulaId(Long aulaId);
+
 }

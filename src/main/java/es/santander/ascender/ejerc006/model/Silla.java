@@ -32,10 +32,10 @@ public class Silla {
     public Silla() {
     }
 
-    public Silla(Long id, String nombre, Integer numeroSilla, boolean disponible, Long mesaId) {
+    public Silla(Long id, String nombre, boolean disponible, Long mesaId) {
         this.id = id;
         this.nombre = nombre;
-        this.numeroSilla = numeroSilla;
+        //this.numeroSilla = numeroSilla;
         this.disponible = disponible;
         this.mesaId = mesaId;
     }
@@ -56,13 +56,13 @@ public class Silla {
         this.nombre = nombre;
     }
 
-    public Integer getNumeroSilla() {
+    /*public Integer getNumeroSilla() {
         return numeroSilla;
     }
 
     public void setNumeroSilla(Integer numeroSilla) {
         this.numeroSilla = numeroSilla;
-    }
+    }*/
 
     public boolean isDisponible() {
         return disponible;
@@ -82,7 +82,7 @@ public class Silla {
 
     // Método para generar el nombre de la silla basado en la mesa
     public void generarNombre(Long mesaId) {
-        // Generar el nombre basado en el mesaId y el numeroSilla
-        this.nombre = "Silla " + mesaId + "-" + this.numeroSilla;
+         
+        this.nombre = "Silla " + mesaId + "-" + this.id;
     }
 }

@@ -19,7 +19,7 @@ public class MesaController {
     @PostMapping
     public ResponseEntity<Mesa> create(@RequestBody Mesa mesa) {
         Mesa nuevaMesa = mesaService.create(mesa);
-        return ResponseEntity.status(201).body(nuevaMesa);  // Código de estado 201 Created
+        return ResponseEntity.status(201).body(nuevaMesa); // Código de estado 201 Created
     }
 
     // Obtener una Mesa por ID
@@ -27,9 +27,9 @@ public class MesaController {
     public ResponseEntity<Mesa> getById(@PathVariable Long id) {
         Mesa mesa = mesaService.read(id);
         if (mesa != null) {
-            return ResponseEntity.ok(mesa);  // Código de estado 200 OK
+            return ResponseEntity.ok(mesa); // Código de estado 200 OK
         } else {
-            return ResponseEntity.notFound().build();  // Código de estado 404 NOT FOUND
+            return ResponseEntity.notFound().build(); // Código de estado 404 NOT FOUND
         }
     }
 
@@ -37,22 +37,22 @@ public class MesaController {
     @GetMapping
     public ResponseEntity<List<Mesa>> getAll() {
         List<Mesa> mesas = mesaService.list();
-        return ResponseEntity.ok(mesas);  // Código de estado 200 OK
+        return ResponseEntity.ok(mesas); // Código de estado 200 OK
     }
 
     // Actualizar una Mesa
     @PutMapping("/{id}")
     public ResponseEntity<Mesa> update(@PathVariable Long id, @RequestBody Mesa mesa) {
-        mesa.setId(id);  // Asignamos el ID recibido en la URL a la mesa que estamos actualizando
+        mesa.setId(id); // Asignamos el ID recibido en la URL a la mesa que estamos actualizando
         Mesa mesaActualizada = mesaService.update(mesa);
-        return ResponseEntity.ok(mesaActualizada);  // Código de estado 200 OK
+        return ResponseEntity.ok(mesaActualizada); // Código de estado 200 OK
     }
 
     // Eliminar una Mesa
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         mesaService.delete(id);
-        return ResponseEntity.noContent().build();  // Código de estado 204 No Content
+        return ResponseEntity.noContent().build(); // Código de estado 204 No Content
     }
 
     // Obtener mesas por ID de Aula
@@ -60,6 +60,13 @@ public class MesaController {
     public ResponseEntity<List<Mesa>> getByAulaId(@PathVariable Long aulaId) {
         List<Mesa> mesas = mesaService.findByAulaId(aulaId);
         return mesas.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(mesas);
+    }
+
+    // Mover una mesa a otro aula
+    @PutMapping("/{mesaId}/mover/{nuevaAulaId}")
+    public ResponseEntity<Mesa> moveToNewAula(@PathVariable Long mesaId, @PathVariable Long nuevaAulaId) {
+        Mesa mesaActualizada = mesaService.moveToNewAula(mesaId, nuevaAulaId);
+        return ResponseEntity.ok(mesaActualizada);
     }
 
 }

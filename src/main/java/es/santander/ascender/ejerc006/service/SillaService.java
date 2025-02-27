@@ -20,7 +20,10 @@ public class SillaService {
                     CRUDOperation.CREATE,
                     silla.getId());
         }
-        return sillaRepository.save(silla);
+        silla = sillaRepository.save(silla);
+        silla.generarNombre(silla.getMesaId()); // Genera el nombre 
+        silla = sillaRepository.save(silla);
+        return silla;
     }
 
     // Leer una Silla por ID

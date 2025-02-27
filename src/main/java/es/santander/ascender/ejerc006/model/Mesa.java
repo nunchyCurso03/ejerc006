@@ -16,16 +16,16 @@ public class Mesa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String nombre;
     
     @Column(nullable = false)
     @Positive
-    private Integer capacidadMaxima;
+    private Integer capacidadMaximaSillas;
 
     @Column(nullable = false)
     @Positive
-    private Integer numeroSillas;
+    private Integer numeroSillas = 0;
 
     @Column(nullable = false)
     private Long aulaId;
@@ -33,11 +33,11 @@ public class Mesa {
     public Mesa() {
     }
 
-    public Mesa(Long id,String nombre,  @Positive Integer capacidadMaxima, @Positive Integer numeroSillas, Long aulaId) {
+    public Mesa(Long id,String nombre,  @Positive Integer capacidadMaximaSillas, @Positive Integer numeroSillas, Long aulaId) {
         this.id = id;
         this.nombre = nombre;
-        this.capacidadMaxima = capacidadMaxima;
-        this.numeroSillas = numeroSillas;
+        this.capacidadMaximaSillas = capacidadMaximaSillas;
+        this.setNumeroSillas(numeroSillas);  // Usamos el setter para validar
         this.aulaId = aulaId;
     }
 
@@ -49,12 +49,15 @@ public class Mesa {
         this.id = id;
     }
     
-    public Integer getCapacidadMaxima() {
-        return capacidadMaxima;
+    public Integer getCapacidadMaximaSillas() {
+        return capacidadMaximaSillas;
     }
 
-    public void setCapacidadMaxima(Integer capacidadMaxima) {
-        this.capacidadMaxima = capacidadMaxima;
+    public void setCapacidadMaximaSillas(Integer capacidadMaximaSillas) {
+        if (capacidadMaximaSillas < this.numeroSillas) {
+            throw new IllegalArgumentException("La capacidad máxima no puede ser menor al número actual de sillas.");
+        }
+        this.capacidadMaximaSillas = capacidadMaximaSillas;
     }
 
     public String getNombre() {
@@ -70,6 +73,9 @@ public class Mesa {
     }
 
     public void setNumeroSillas(Integer numeroSillas) {
+        if (numeroSillas > this.capacidadMaximaSillas) {
+            throw new IllegalArgumentException("El número de sillas no puede superar la capacidad máxima de la mesa.");
+        }
         this.numeroSillas = numeroSillas;
     }
 
@@ -77,7 +83,7 @@ public class Mesa {
         return aulaId;
     }
 
-    public void setAula_id(Long aulaId) {
+    public void setAulaId(Long aulaId) {
         this.aulaId = aulaId;
     }  
 

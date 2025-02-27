@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.santander.ascender.ejerc006.model.Aula;
 import es.santander.ascender.ejerc006.model.Mesa;
 import es.santander.ascender.ejerc006.model.Silla;
+import es.santander.ascender.ejerc006.repository.AulaRepository;
 import es.santander.ascender.ejerc006.repository.MesaRepository;
 import es.santander.ascender.ejerc006.repository.SillaRepository;
 
@@ -16,16 +18,38 @@ public class MesaService {
     @Autowired
     private MesaRepository mesaRepository;
 
-     @Autowired
+    @Autowired
     private SillaRepository sillaRepository;
+
+    @Autowired
+    private AulaRepository aulaRepository;
 
     // Crear una Mesa
     public Mesa create(Mesa mesa) {
+
         if (mesa.getId() != null) {
             throw new CrudSecurityException("No se puede crear una mesa con ID ya existente",
                     CRUDOperation.CREATE, mesa.getId());
         }
-        return mesaRepository.save(mesa);
+        // Obtener el aula a la que pertenece la mesa
+        Aula aula = aulaRepository.findById(mesa.getAulaId())
+                .orElseThrow(() -> new RuntimeException("Aula no encontrada"));
+
+        // Contar cuántas mesas hay en el aula
+        int numMesasEnAula = mesaRepository.countByAulaId(mesa.getAulaId());
+
+        // Verificar que no se supere la capacidad máxima
+        if (numMesasEnAula >= aula.getCapacidadMaximaMesas()) {
+            throw new RuntimeException("No se pueden agregar más mesas. Capacidad máxima alcanzada.");
+        }
+
+        mesa = mesaRepository.save(mesa);
+        mesa.generarNombre(mesa.getAulaId()); // Genera el nombre
+
+        // Guarda de nuevo la mesa para persistir el nombre generado
+        mesa = mesaRepository.save(mesa);
+
+        return mesa;
     }
 
     // Leer una Mesa por ID
@@ -63,15 +87,31 @@ public class MesaService {
     // Método para mover una mesa a otro aula
     public Mesa moveToNewAula(Long mesaId, Long nuevaAulaId) {
         Mesa mesa = mesaRepository.findById(mesaId).orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
-        mesa.setAula_id(nuevaAulaId);
+        mesa.setAulaId(nuevaAulaId);
+
+        // verifica que el aula destino tenga espacio disponible antes de mover la mesa
+        Aula nuevaAula = aulaRepository.findById(nuevaAulaId)
+                .orElseThrow(() -> new RuntimeException("Aula destino no encontrada"));
+
+        // Contar cuántas mesas hay en el aula destino
+        int numMesasEnNuevaAula = mesaRepository.countByAulaId(nuevaAulaId);
+
+        // Verificar que no se supere la capacidad máxima en el aula destino
+        if (numMesasEnNuevaAula >= nuevaAula.getCapacidadMaximaMesas()) {
+            throw new RuntimeException("No se puede mover la mesa. Capacidad máxima del aula alcanzada.");
+        }
+
+        // Mover la mesa al nuevo aula
+        mesa.setAulaId(nuevaAulaId);
+        mesaRepository.save(mesa);
 
         // Actualizamos las sillas que pertenecen a esta mesa
         List<Silla> sillas = sillaRepository.findByMesaId(mesaId);
         for (Silla silla : sillas) {
             silla.setMesaId(mesaId);
-            sillaRepository.save(silla);  // Guardamos la silla con el nuevo mesa_id
+            sillaRepository.save(silla); // Guardamos la silla con el nuevo mesaId
         }
 
-        return mesaRepository.save(mesa);  // Guardamos la mesa con el nuevo aula_id
+        return mesa; // Guardamos la mesa con el nuevo aulaId
     }
 }

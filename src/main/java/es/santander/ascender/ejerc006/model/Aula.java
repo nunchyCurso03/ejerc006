@@ -24,11 +24,11 @@ public class Aula {
 
     @Column(nullable = false)
     @Positive
-    private Integer capacidadMaxima;
+    private Integer capacidadMaximaMesas;  
 
     @Column(nullable = false)
     @Positive
-    private Integer numeroMesas;
+    private Integer numeroMesas = 0;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -43,12 +43,12 @@ public class Aula {
     public Aula() {
     }
 
-    public Aula(Long id, String nombre, TipoAula tipoAula, Integer capacidadMaxima, Integer numeroMesas, boolean proyector, Long edificioId) {
+    public Aula(Long id, String nombre, TipoAula tipoAula, Integer capacidadMaximaMesas, Integer numeroMesas, boolean proyector, Long edificioId) {
         this.id = id;
         this.nombre = nombre;
         this.tipoAula = tipoAula;  
-        this.capacidadMaxima = capacidadMaxima;
-        this.numeroMesas = numeroMesas;           
+        this.capacidadMaximaMesas = capacidadMaximaMesas;
+        this.setNumeroMesas(numeroMesas); // Usamos el setter para validar           
         this.proyector = proyector;
         this.edificioId = edificioId;
     }
@@ -69,12 +69,16 @@ public class Aula {
         this.nombre = nombre;
     }
 
-    public Integer getCapacidadMaxima() {
-        return capacidadMaxima;
+    public Integer getCapacidadMaximaMesas() {
+        return capacidadMaximaMesas;
     }
 
-    public void setCapacidadMaxima(Integer capacidadMaxima) {
-        this.capacidadMaxima = capacidadMaxima;
+    public void setCapacidadMaximaMesas(Integer capacidadMaximaMesas) {
+        
+        if (capacidadMaximaMesas < this.numeroMesas) {
+            throw new IllegalArgumentException("La capacidad máxima no puede ser menor al número actual de mesas.");
+        }
+        this.capacidadMaximaMesas = capacidadMaximaMesas;
     }
 
 
@@ -83,6 +87,9 @@ public class Aula {
     }
 
     public void setNumeroMesas(Integer numeroMesas) {
+        if (numeroMesas > this.capacidadMaximaMesas) {
+            throw new IllegalArgumentException("El número de mesas no puede superar la capacidad máxima del aula.");
+        }
         this.numeroMesas = numeroMesas;
     }
     
