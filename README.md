@@ -2,7 +2,7 @@ EJERC006 -Nunchy
 Proyecto de base de datos en java, con spring:
 **Enunciado:**
 Tenemos 4 entidades: Edicificio, dentro de edificio tenemos Aula, dentro de aula tenemos Mesa y luego tenemos Silla.
-Edificio tiene aulas (no tenemos foreig pero tenemos un campo que es edificio_id).
+Edificio tiene aulas (no tenemos foreing pero tenemos un campo que es edificioId).
 En mesa hay un campo que es aula_id, y en silla tenemos uno que es mesa_id. 
 Inventar al menos 4 campos por entidad que tengan lógica.
 De las logicas como mejora hay que exponer un método (que no sea el mismo de actualizar) que permita mover una mesa a un nuevo aula, 

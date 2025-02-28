@@ -9,7 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "AULA")
@@ -23,11 +23,11 @@ public class Aula {
     private String nombre;
 
     @Column(nullable = false)
-    @Positive
+    @PositiveOrZero
     private Integer capacidadMaximaMesas;  
 
     @Column(nullable = false)
-    @Positive
+    @PositiveOrZero
     private Integer numeroMesas = 0;
 
     @Enumerated(EnumType.STRING)
@@ -87,10 +87,16 @@ public class Aula {
     }
 
     public void setNumeroMesas(Integer numeroMesas) {
-        if (numeroMesas > this.capacidadMaximaMesas) {
-            throw new IllegalArgumentException("El número de mesas no puede superar la capacidad máxima del aula.");
-        }
+     
         this.numeroMesas = numeroMesas;
+    }
+
+    public void incrementarNumeroMesas() {
+        if (this.numeroMesas < this.capacidadMaximaMesas) {
+            this.numeroMesas++;
+        } else {
+            throw new IllegalArgumentException("No se pueden agregar más mesas a esta aula.");
+        }
     }
     
     public TipoAula getTipoAula() {

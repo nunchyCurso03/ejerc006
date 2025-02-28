@@ -43,6 +43,10 @@ public class MesaService {
             throw new RuntimeException("No se pueden agregar más mesas. Capacidad máxima alcanzada.");
         }
 
+        // Incrementar el número de mesas en el aula
+        aula.incrementarNumeroMesas();
+        aulaRepository.save(aula);  // Guarda  el cambio en la BD
+
         mesa = mesaRepository.save(mesa);
         mesa.generarNombre(mesa.getAulaId()); // Genera el nombre
 
@@ -87,7 +91,11 @@ public class MesaService {
     // Método para mover una mesa a otro aula
     public Mesa moveToNewAula(Long mesaId, Long nuevaAulaId) {
         Mesa mesa = mesaRepository.findById(mesaId).orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
-        mesa.setAulaId(nuevaAulaId);
+        // mesa.setAulaId(nuevaAulaId);
+
+        // Comprobamos que existe el aulaOriginal
+        Aula aulaOriginal = aulaRepository.findById(mesa.getAulaId())
+                .orElseThrow(() -> new RuntimeException("Aula original no encontrada"));
 
         // verifica que el aula destino tenga espacio disponible antes de mover la mesa
         Aula nuevaAula = aulaRepository.findById(nuevaAulaId)
@@ -100,6 +108,14 @@ public class MesaService {
         if (numMesasEnNuevaAula >= nuevaAula.getCapacidadMaximaMesas()) {
             throw new RuntimeException("No se puede mover la mesa. Capacidad máxima del aula alcanzada.");
         }
+
+        // actualizo el numero de mesas
+        aulaOriginal.setNumeroMesas(aulaOriginal.getNumeroMesas() - 1);
+        nuevaAula.setNumeroMesas(nuevaAula.getNumeroMesas() + 1);
+
+        // Guardamos los cambios en las aulas
+        aulaRepository.save(aulaOriginal);
+        aulaRepository.save(nuevaAula);
 
         // Mover la mesa al nuevo aula
         mesa.setAulaId(nuevaAulaId);

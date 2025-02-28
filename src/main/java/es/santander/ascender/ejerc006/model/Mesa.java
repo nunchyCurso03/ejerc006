@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "MESA")
@@ -24,7 +25,7 @@ public class Mesa {
     private Integer capacidadMaximaSillas;
 
     @Column(nullable = false)
-    @Positive
+    @PositiveOrZero
     private Integer numeroSillas = 0;
 
     @Column(nullable = false)
@@ -77,6 +78,13 @@ public class Mesa {
             throw new IllegalArgumentException("El número de sillas no puede superar la capacidad máxima de la mesa.");
         }
         this.numeroSillas = numeroSillas;
+    }
+    public void incrementarNumeroSillas() {
+        if (this.numeroSillas < this.capacidadMaximaSillas) {
+            this.numeroSillas++;
+        } else {
+            throw new IllegalArgumentException("No se pueden agregar más sillas a esta Mesa.");
+        }
     }
 
     public Long getAulaId() {

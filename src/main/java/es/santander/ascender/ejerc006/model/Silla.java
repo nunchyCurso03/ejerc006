@@ -5,8 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Positive;
+import jakarta.persistence.Table; 
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "SILLA")
@@ -16,12 +16,12 @@ public class Silla {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String nombre;
 
     @Column(nullable = false)
-    @Positive
-    private Integer numeroSilla;
+   @PositiveOrZero
+    private Integer numeroSilla = 0;
 
     @Column(nullable = false)
     private boolean disponible;
