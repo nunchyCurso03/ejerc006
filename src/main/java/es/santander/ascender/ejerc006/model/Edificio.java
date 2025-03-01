@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "EDIFICIO")
@@ -26,12 +27,13 @@ public class Edificio {
     private String direccion;
 
     @Column(nullable = false)
-    private Integer numPlantas;
+    @Positive
+    private Integer numPlantas = 1;
 
     @Column(nullable = false)
     private Integer capacidadMaxima;
 
-    @Enumerated(EnumType.STRING) // Guardará el nombre del Enum en la BD
+    @Enumerated(EnumType.STRING) 
     @Column(nullable = false)
     private TipoEdificio tipoEdificio;
 
