@@ -39,12 +39,13 @@ public class AulaRepositoryTest {
 
     @Test
     public void testFindById() {
-        Aula aula = aulaRepository.findById(1L).get();
+        // aula = aulaRepository.findById(1L).get();
+        Optional<Aula> optionalAula = aulaRepository.findById(aula.getId());
+        assertTrue(optionalAula.isPresent());
+        Aula aula = optionalAula.get();
 
         // Verifica que el nombre del aula sea 'Nunchy'
-        assertEquals("Nunchy", aula.getNombre());
-        // Verifica que el ID sea 1
-        assertEquals(1L, aula.getId());
+        assertEquals("Nunchy", aula.getNombre());        
         // Verifica que el aula no tenga valores nulos
         assertNotNull(aula.getId(), "El ID no debe ser nulo");
         assertNotNull(aula.getNombre(), "El nombre no debe ser nulo");

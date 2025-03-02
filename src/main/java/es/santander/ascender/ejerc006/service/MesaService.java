@@ -45,7 +45,7 @@ public class MesaService {
 
         // Incrementar el número de mesas en el aula
         aula.incrementarNumeroMesas();
-        aulaRepository.save(aula);  // Guarda  el cambio en la BD
+        aulaRepository.save(aula); // Guarda el cambio en la BD
 
         mesa = mesaRepository.save(mesa);
         mesa.generarNombre(mesa.getAulaId()); // Genera el nombre
@@ -74,7 +74,7 @@ public class MesaService {
         return mesaRepository.findByAulaId(aulaId);
     }
 
-    // Actualizar una Mesa
+    /* Actualizar una Mesa */
     public Mesa update(Mesa mesa) {
         if (mesa.getId() == null) {
             throw new CrudSecurityException("Han tratado de crear un registro mesa utilizando modificar",
@@ -83,23 +83,50 @@ public class MesaService {
         return mesaRepository.save(mesa);
     }
 
-    // Eliminar una Mesa por ID
+    /* Eliminar una Mesa por ID */
+
     public void delete(Long id) {
+
+        // Buscar la mesa a eliminar
+        Mesa mesa = mesaRepository.findById(id)
+                .orElseThrow(() -> new CrudSecurityException("Mesa no encontrada", CRUDOperation.DELETE, id));
+
+        // Verifico si hay sillas asociadas a la mesa, si las hay , no se puede eliminar
+        List<Silla> sillas = sillaRepository.findByMesaId(id);
+        if (!sillas.isEmpty()) {
+            throw new CrudSecurityException("No se puede eliminar la mesa porque tiene sillas asociadas",
+                    CRUDOperation.DELETE, id);
+        }
+
+        // Busco el aula en el que está la mesa
+        Aula aula = aulaRepository.findById(mesa.getAulaId())
+                .orElseThrow(
+                        () -> new CrudSecurityException("Aula no encontrada", CRUDOperation.READ, mesa.getAulaId()));
+
+        // Restar 1 al número de mesas
+        aula.setNumeroMesas(aula.getNumeroMesas() - 1);
+
+        // Guardar los cambios en el aula
+        aulaRepository.save(aula);
         mesaRepository.deleteById(id);
     }
 
-    // Método para mover una mesa a otro aula
+    /* Método para mover una mesa a otro aula */
     public Mesa moveToNewAula(Long mesaId, Long nuevaAulaId) {
-        Mesa mesa = mesaRepository.findById(mesaId).orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
+        Mesa mesa = mesaRepository.findById(mesaId)
+                .orElseThrow(() -> new CrudSecurityException("Mesa no encontrada", CRUDOperation.READ, mesaId));
+
         // mesa.setAulaId(nuevaAulaId);
 
         // Comprobamos que existe el aulaOriginal
         Aula aulaOriginal = aulaRepository.findById(mesa.getAulaId())
-                .orElseThrow(() -> new RuntimeException("Aula original no encontrada"));
+                .orElseThrow(() -> new CrudSecurityException("Aula original no encontrada", CRUDOperation.READ,
+                        mesa.getAulaId()));
 
         // verifica que el aula destino tenga espacio disponible antes de mover la mesa
         Aula nuevaAula = aulaRepository.findById(nuevaAulaId)
-                .orElseThrow(() -> new RuntimeException("Aula destino no encontrada"));
+                .orElseThrow(
+                        () -> new CrudSecurityException("Aula destino no encontrada", CRUDOperation.READ, nuevaAulaId));
 
         // Contar cuántas mesas hay en el aula destino
         int numMesasEnNuevaAula = mesaRepository.countByAulaId(nuevaAulaId);

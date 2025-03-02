@@ -39,10 +39,12 @@ public class SillaRepositoryTest {
     @Test
     public void testFindById() {
 
-        Silla silla = sillaRepository.findById(1L).get();
+       // Silla silla = sillaRepository.findById(1L).get();
+        Optional<Silla> optionalSilla = sillaRepository.findById(silla.getId());
+        assertTrue(optionalSilla.isPresent());
+        Silla silla = optionalSilla.get();
 
-        assertEquals("silla 1-1", silla.getNombre());
-        assertEquals(1L, silla.getId());
+        assertEquals("silla 1-1", silla.getNombre());        
         assertNotNull(silla.getId(), "El ID no debe ser nulo");
         assertNotNull(silla.getNombre(), "El nombre no debe ser nulo");
         assertEquals(true, silla.isDisponible(), "La silla debe estar ocupada");

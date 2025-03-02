@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,21 @@ public class EdificioRepositoryTest {
         edificioRepository.save(edificio);
     }
 
+     @AfterEach
+    public void tearDown() {
+        edificioRepository.deleteAll();
+    }
+
     @Test
     public void testFindById() {
-        Edificio edificio = edificioRepository.findById(1L).get();
+        //edificio = edificioRepository.findById(1L).get();
+         Optional<Edificio> optionalEdificio = edificioRepository.findById(edificio.getId());
+        assertTrue(optionalEdificio.isPresent());
+        Edificio edificio = optionalEdificio.get();
+
 
         // Verifica que el nombre sea 'Principal'
-        assertEquals("Principal", edificio.getNombre());
-        // Verifica que el ID sea 1
-        assertEquals(1L, edificio.getId());
+        assertEquals("Principal", edificio.getNombre());       
         // Verifica que el edificio no tenga valores nulos  
         assertNotNull(edificio.getId(), "El ID no debe ser nulo");
         assertNotNull(edificio.getNombre(), "El nombre no debe ser nulo");

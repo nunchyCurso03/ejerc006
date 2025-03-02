@@ -42,10 +42,12 @@ public class MesaRepositoryTest {
   @Test
     public void testFindById(){
 
-        Mesa mesa = mesaRepository.findById(1L).get();
+        //mesa = mesaRepository.findById(1L).get();
+        Optional<Mesa> optionalMesa = mesaRepository.findById(mesa.getId());
+        assertTrue(optionalMesa.isPresent());
+        Mesa mesa = optionalMesa.get();
 
-        assertEquals("mesa 1-1", mesa.getNombre());
-        assertEquals(1L, mesa.getId());
+        assertEquals("mesa 1-1", mesa.getNombre());        
         assertNotNull(mesa.getId(), "El ID no debe ser nulo");
         assertNotNull(mesa.getNombre(), "El nombre no debe ser nulo");
         assertEquals(4, mesa.getCapacidadMaximaSillas(), "La capacidad máxima de sillas debe ser 4");

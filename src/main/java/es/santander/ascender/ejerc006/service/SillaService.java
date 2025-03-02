@@ -106,6 +106,19 @@ public class SillaService {
 
     // Eliminar una Silla por ID
     public void delete(Long id) {
+
+        // Buscar la silla a eliminar
+        Silla silla = sillaRepository.findById(id).orElseThrow(() -> new RuntimeException("Silla no encontrada"));
+
+        // Busco la mesa en la que está la silla
+        Mesa mesa = mesaRepository.findById(silla.getMesaId())
+                .orElseThrow(() -> new RuntimeException("Mesa no encontrada"));
+
+        // Restar 1 al número de sillas
+        mesa.setNumeroSillas(mesa.getNumeroSillas() - 1);
+
+        // Guardar los cambios en la mesa
+        mesaRepository.save(mesa);
         sillaRepository.deleteById(id);
     }
 }
